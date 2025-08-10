@@ -1,0 +1,153 @@
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(270deg, #ff9a9e, #fad0c4, #fbc2eb, #a6c1ee);
+  background-size: 800% 800%;
+  animation: gradientShift 15s ease infinite;
+    overflow: hidden;
+}
+
+@keyframes gradientShift {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+  color: #ff6f91;
+  text-shadow:
+    0 0 5px #ff6f91,
+    0 0 10px #ff6f91,
+    0 0 20px #ffadc6,
+    0 0 30px #ffadc6;
+  letter-spacing: 1.5px;
+  text-align: center;
+  padding-top: 10vh;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* Animasi dan keyframes lain tetap kamu pakai */
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 2.5rem; /* sedikit diperbesar */
+    padding-top: 10vh;
+    letter-spacing: normal;
+  }
+}
+
+
+h1:hover {
+  color: #ff4a68;
+  text-shadow:
+    0 0 10px #ff4a68,
+    0 0 20px #ff4a68,
+    0 0 30px #ff7aa2,
+    0 0 40px #ff7aa2;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+
+.cursor {
+  display: inline-block;
+  width: 3px;
+  background: #ff6f91;
+  animation: blink 0.7s infinite;
+  margin-left: 3px;
+}
+
+@keyframes blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0.2; }
+}
+
+
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+/* Tambahkan di style.css */
+.heart-pulse {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  pointer-events: none;
+  background: red;
+  clip-path: polygon(
+    50% 15%, 61% 15%, 75% 25%, 75% 45%, 50% 75%, 25% 45%, 25% 25%, 39% 15%
+  );
+  animation: pulse 1.2s infinite ease-in-out;
+  opacity: 0.8;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    text-shadow:
+      0 0 5px #ff6f91,
+      0 0 10px #ff6f91;
+  }
+  50% {
+    transform: scale(1.05);
+    text-shadow:
+      0 0 15px #ff4a68,
+      0 0 20px #ff4a68;
+  }
+}
+
+@keyframes scaleGlow {
+  0% {
+    transform: scale(1);
+    text-shadow:
+      0 0 5px #ff6f91,
+      0 0 10px #ff6f91,
+      0 0 20px #ffadc6,
+      0 0 30px #ffadc6;
+  }
+  50% {
+    transform: scale(1.1);
+    text-shadow:
+      0 0 15px #ff4a68,
+      0 0 25px #ff4a68,
+      0 0 35px #ff7aa2,
+      0 0 45px #ff7aa2;
+  }
+  100% {
+    transform: scale(1);
+    text-shadow:
+      0 0 5px #ff6f91,
+      0 0 10px #ff6f91,
+      0 0 20px #ffadc6,
+      0 0 30px #ffadc6;
+  }
+}
+
+#particleCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none; /* Supaya klik tetap ke elemen lain */
+  z-index: 0; /* Di bawah teks */
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}

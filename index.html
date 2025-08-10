@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buat dede sayangg</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1 id="text"></h1>
+<canvas id="loveCanvas"></canvas>
+<canvas id="particleCanvas"></canvas>
+<audio id="clickSound" src="https://freesound.org/data/previews/256/256113_3263906-lq.mp3"></audio>
+
+<script>
+    // Efek ketik huruf demi huruf
+    const textElement = document.getElementById("text");
+    const message = "Happy Mensive ke 9 bulan sayanggg ❤️";
+    let index = 0;
+
+    function typeEffect() {
+  if (index < message.length) {
+    textElement.textContent += message.charAt(index);
+    index++;
+    setTimeout(typeEffect, 120);
+  } else {
+    const cursorSpan = document.createElement("span");
+    cursorSpan.classList.add("cursor");
+    textElement.appendChild(cursorSpan);
+    
+    // Tambahkan animasi scaleGlow ke teks
+    textElement.style.animation = "scaleGlow 2s ease forwards";
+  }
+}
+
+    typeEffect();
+
+    // Efek love beterbangan
+    const canvas = document.getElementById("loveCanvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const hearts = [];
+
+    class Heart {
+        constructor(x, y, size, speed, color) {
+            this.x = x;
+            this.y = y;
+            this.size = size;
+            this.speed = speed;
+            this.color = color;
+            this.angle = Math.random() * Math.PI * 2;
+            this.spin = (Math.random() - 0.5) * 0.02;
+        }
+
+        draw() {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.angle);
+            ctx.fillStyle = this.color;
+
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.bezierCurveTo(-this.size/2, -this.size/2, -this.size, this.size/3, 0, this.size);
+            ctx.bezierCurveTo(this.size, this.size/3, this.size/2, -this.size/2, 0, 0);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        update() {
+            this.y -= this.speed;
+            this.angle += this.spin;
+
+            if (this.y < -this.size) {
+                this.y = canvas.height + this.size;
+                this.x = Math.random() * canvas.width;
+            }
+            this.draw();
+        }
+    }
+
+    function createHearts() {
+        for (let i = 0; i < 30; i++) {
+            let size = Math.random() * 15 + 8;
+            let x = Math.random() * canvas.width;
+            let y = Math.random() * canvas.height;
+            let speed = Math.random() * 1 + 0.5;
+            let color = `hsl(${Math.random() * 360}, 80%, 70%)`;
+            hearts.push(new Heart(x, y, size, speed, color));
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        hearts.forEach(heart => heart.update());
+        requestAnimationFrame(animate);
+    }
+
+    createHearts();
+    animate();
+
+    window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+
+    // Tambahkan di script tag setelah animate()
+function createPulseHeart() {
+  const heart = document.createElement('div');
+  heart.classList.add('heart-pulse');
+
+  // Posisi acak di sekitar teks
+  const rect = textElement.getBoundingClientRect();
+  const x = rect.left + Math.random() * rect.width;
+  const y = rect.top + Math.random() * rect.height;
+
+  heart.style.left = `${x}px`;
+  heart.style.top = `${y}px`;
+
+  document.body.appendChild(heart);
+
+  setTimeout(() => {
+    heart.remove();
+  }, 1200);
+}
+
+// Buat muncul beberapa denyut hati tiap 400ms
+setInterval(createPulseHeart, 400);
+
+const particleCanvas = document.getElementById('particleCanvas');
+const pCtx = particleCanvas.getContext('2d');
+
+function resizeCanvas() {
+  particleCanvas.width = window.innerWidth;
+  particleCanvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const particles = [];
+const colors = ['#ff6f91', '#ffadc6', '#ff4a68', '#ff7aa2'];
+
+class Particle {
+  constructor() {
+    this.x = Math.random() * particleCanvas.width;
+    this.y = particleCanvas.height + 10;
+    this.size = Math.random() * 6 + 4;
+    this.speedY = Math.random() * 1 + 0.5;
+    this.speedX = (Math.random() - 0.5) * 0.5;
+    this.color = colors[Math.floor(Math.random() * colors.length)];
+    this.opacity = 1;
+    this.life = 0;
+    this.maxLife = 200 + Math.random() * 100;
+  }
+
+  draw() {
+    pCtx.fillStyle = `rgba(${hexToRgb(this.color)},${this.opacity})`;
+    // Bentuk hati sederhana dengan path
+    pCtx.beginPath();
+    const x = this.x;
+    const y = this.y;
+    const size = this.size;
+    pCtx.moveTo(x, y);
+    pCtx.bezierCurveTo(x, y - size/2, x - size, y - size/2, x - size, y);
+    pCtx.bezierCurveTo(x - size, y + size/2, x, y + size, x, y + size*1.5);
+    pCtx.bezierCurveTo(x, y + size, x + size, y + size/2, x + size, y);
+    pCtx.bezierCurveTo(x + size, y - size/2, x, y - size/2, x, y);
+    pCtx.closePath();
+    pCtx.fill();
+  }
+
+  update() {
+    this.y -= this.speedY;
+    this.x += this.speedX;
+    this.life++;
+    this.opacity = 1 - this.life / this.maxLife;
+    if (this.life >= this.maxLife) {
+      this.reset();
+    }
+  }
+
+  reset() {
+    this.x = Math.random() * particleCanvas.width;
+    this.y = particleCanvas.height + 10;
+    this.size = Math.random() * 6 + 4;
+    this.speedY = Math.random() * 1 + 0.5;
+    this.speedX = (Math.random() - 0.5) * 0.5;
+    this.color = colors[Math.floor(Math.random() * colors.length)];
+    this.opacity = 1;
+    this.life = 0;
+    this.maxLife = 200 + Math.random() * 100;
+  }
+}
+
+function hexToRgb(hex) {
+  const bigint = parseInt(hex.replace('#',''), 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return `${r},${g},${b}`;
+}
+
+function animateParticles() {
+  pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+  if (particles.length < 80) {
+    particles.push(new Particle());
+  }
+  particles.forEach(p => {
+    p.update();
+    p.draw();
+  });
+  requestAnimationFrame(animateParticles);
+}
+
+animateParticles();
+
+
+</script>
+</body>
+</html>
